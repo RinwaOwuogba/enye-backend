@@ -19,8 +19,14 @@ exports.validFetchExchangeRates = [
 	query('currency', 'this field is required')
 		.isString()
 		.custom((value) => {
-			const currencyArray = value.split(',');
+			const errorMessage =
+				'this field should contain valid comma seperated currency symbols';
 
+			if (typeof value !== 'string') {
+				throw new Error(errorMessage);
+			}
+
+			const currencyArray = value.split(',');
 			let isCurrenciesListValid = true;
 
 			currencyArray.some((currency) => {
@@ -34,9 +40,7 @@ exports.validFetchExchangeRates = [
 			});
 
 			if (!isCurrenciesListValid) {
-				throw new Error(
-					'this field should contain valid comma seperated currency symbols'
-				);
+				throw new Error(errorMessage);
 			}
 
 			return true;
